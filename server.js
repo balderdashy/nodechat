@@ -11,9 +11,11 @@ var googlemaps = require('googlemaps');
 var database = require('./database'),
 	routes = require('./routes'),
 	server = routes.server,
-	socket = io.listen(server),
 	config = require('./config'),
 	logger = require('./logger');
+
+// Set up
+io = io.listen(server);
 
 // load server components
 var	auth = require('./auth'),
@@ -21,7 +23,7 @@ var	auth = require('./auth'),
 	chat = require('./chat'),
 	socketclient = require('./socketclient');
 
-socket.on('connection',function(client){
+io.sockets.on('connection',function(client){
 	
 	client.on('message', function(message) {
 		
@@ -38,17 +40,17 @@ socket.on('connection',function(client){
 		// handle login
 		if(request.command == "login") {
 			logger.log("Logging in");
-			auth.login(socket,client,request);
+			auth.login(io,client,request);
 		}
 		// handle location check in
 		else if(request.command == "checkin" && request.latlng ){
 			logger.log("Checking in");
-			location.checkin(socket,client,request);
+			location.checkin(io,client,request);
 		}
 		// handle message
 		else if(request.command == "message") {
 			logger.log("Message received");
-			chat.talk(socket,client,request);
+			chat.talk(io,client,request);
 		}
 		
 	});
@@ -58,7 +60,7 @@ socket.on('connection',function(client){
 		database.get_user_session(client,function(session){
 			if(session){
 				database.logout_session(client, function(res){
-					socketclient.broadcast(socket,"<p style='color:red'>"+session.username+" is disconnected.</p>");
+					socketclient.broadcast(io,"<p style='color:red'>"+session.username+" is disconnected.</p>");
 				});
 			}
 		});
@@ -70,7 +72,7 @@ socket.on('connection',function(client){
 server.get('/meow/:msg', function(req,res) {
 	if(req.params.msg){
 		logger.log(JSON.stringify(req.params.msg));
-		socketclient.broadcast(socket,req.params.msg);
+		socketclient.broadcast(io,req.params.msg);
 		res.send(JSON.stringify({status:"OK"}));
 		
 	}else{

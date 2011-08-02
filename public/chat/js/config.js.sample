@@ -1,1 +1,1 @@
-var socket = new io.Socket(<yournodeserver.com>,{port:<port number>});
+var socket = io.connect(<yournodeserver.com>,{port:<port number>});

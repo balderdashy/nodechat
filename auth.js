@@ -8,7 +8,7 @@ exports.login = function(socket,client,request){
 		
 		database.login(request.username, request.password, function(user){
 			if(!user){
-				socketclient.message(client,"<p style='color:grey'>login failed!</p>");
+				socketclient.message(client,"<p style='color:grey'>login failed (!user)!</p>");
 				return;
 			}
 			else{
@@ -36,5 +36,5 @@ exports.login = function(socket,client,request){
 		});
 		
 	}else
-		socketclient.message(client,"<p style='color:grey'>Invalid credentials</p>");
+		socketclient.message(client,"<p style='color:grey'>Please specify a username AND password.</p>");
 }

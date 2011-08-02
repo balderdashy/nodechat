@@ -153,9 +153,10 @@
       Messages.bind('all',     this.render);
     
       Messages.fetch();
-		socket.connect();
+//		socket.connect();
 		var app = this;
-		socket.on('connect', function(){ 
+		socket.on('connect', function(){
+			console.log(socket);
 			socket.send( JSON.stringify({
 				ip:ipaddr
 			}));
