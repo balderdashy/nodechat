@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	ObjectId = Schema.ObjectId,
-	_ = require('./lib/underscore')._,
+	_ = require('underscore')._,
 	logger = require('./logger');
 
 mongoose.connect('mongodb://localhost/nodechat');
@@ -38,17 +38,13 @@ var LahbotMemory = new Schema({
 	mode:String
 });
 
-mongoose.model('User',User);
-mongoose.model('UserSession', UserSession);
-mongoose.model('Conversation', Conversation);
-mongoose.model('LahbotMemory', LahbotMemory);
+User = mongoose.model('User',User);
+UserSession = mongoose.model('UserSession', UserSession);
+Conversation = mongoose.model('Conversation', Conversation);
+LahbotMemory = mongoose.model('LahbotMemory', LahbotMemory);
 
 exports.db = mongoose;
 
-var Conversation = mongoose.model('Conversation');
-var User = mongoose.model('User');
-var UserSession = mongoose.model('UserSession');
-var LahbotMemory = mongoose.model('LahbotMemory');
 
 function login(username,password,callback) {
 	User.findOne({username:username,password:password},function(err,doc){
@@ -63,19 +59,19 @@ function login(username,password,callback) {
 }
 
 function login_session(client,user,callback) {
-	UserSession.findOne({session:client.sessionId, valid:true},function(err,doc){
+	UserSession.findOne({session:client.id, valid:true},function(err,doc){
 		logger.log("login session: "+user.username)
 		var session = false;
 		if (doc) {
 			session = doc;
 		}
 		else session = new UserSession();
-		session.session = client.sessionId;
+		session.session = client.id;
 		session.user_id = user._id;
 		session.username = user.username;
 		session.valid = true;
 		session.save(function(err){
-			logger.log("login client session: "+client.sessionId +" err:"+JSON.stringify(err));
+			logger.log("login client session: "+client.id +" err:"+JSON.stringify(err));
 			callback(true);
 		});
 	});
@@ -94,8 +90,11 @@ function check_user_session(username,callback) {
 }
 
 function get_user_session(client,callback) {
-	UserSession.findOne({session:client.sessionId, valid:true},function(err,doc){
-		logger.log("get client session: "+client.sessionId+" doc:"+JSON.stringify(doc));
+    console.log("SESSION ID!!!");
+    console.log("Client session id is : " + client.id);
+    console.log(client);
+    UserSession.findOne({session:client.id, valid:true},function(err,doc){
+		logger.log("get client session: "+client.id+" doc:"+JSON.stringify(doc));
 		if (doc) 
 			callback(doc);
 		else
@@ -104,8 +103,13 @@ function get_user_session(client,callback) {
 }
 
 function logout_session(client, callback) {
-	UserSession.findOne({session:client.sessionId, valid:true},function(err,doc){
-		logger.log("get client session: "+client.sessionId+" doc:"+JSON.stringify(doc));
+	console.log("logout_session was called: client = \n");
+	console.log(client);
+	console.log("\ncallback = ");
+	console.log(callback);
+	
+	UserSession.findOne({session:client.id, valid:true},function(err,doc){
+		logger.log("get client session: "+client.id+" doc:"+JSON.stringify(doc));
 		if (doc) {
 			doc.valid = false;
 			doc.save(function(err){

@@ -1,3 +1,4 @@
 .DS_Store
+.svn
 config.js
 public/chat/js/config.js

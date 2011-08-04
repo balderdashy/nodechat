@@ -15,7 +15,7 @@ exports.login = function(socket,client,request){
 				database.login_session(client, user, function(login_session){
 					socketclient.message(client,"<p style='color:grey'>Hi "+user.username+"!</p>");
 					
-					socketclient.broadcast(socket,"<p style='color:blue'>"+user.username+" meow meow!</p>");
+					socketclient.broadcast(socket,"<p style='color:blue'>"+user.username+" joined the conversation.</p>");
 					
 					logger.log("show whoishere");
 					

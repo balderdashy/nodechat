@@ -1,5 +1,15 @@
 ## a socket.io chatroom 
 
+# modified by Mike McNeil, August 3 2011
+# before using, do:
+
+# npm install express
+# npm install socket.io
+# npm install mongoose
+# npm install underscore
+# npm install googlemaps
+# npm install backbone
+
 [demo](http://lah.no.de:8031/chat/) user:alvin|password:pass  
 
 a quick hack to try out chat on nodejs, socketio, mongodb, backbonejs mvc with its todo list example.  

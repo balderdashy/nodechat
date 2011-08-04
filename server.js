@@ -1,13 +1,30 @@
+/**
+ *   Dependencies
 
-// load code library
+# Database
+mongodb (http://www.mongodb.org/)
+
+# Client libraries
+backbone
+underscore
+
+# Node modules
+npm install express
+npm install socket.io
+npm install mongoose
+npm install backbone
+npm install underscore
+npm install googlemaps
+ *
+ */
+
+// load npm libraries
 var http = require('http'),
 	io = require('socket.io'),
-	_ = require('./lib/underscore')._;
+	_ = require('underscore'),
+	googlemaps = require('googlemaps');
 
-// load service library
-var googlemaps = require('googlemaps');
-
-// load server app library
+// load application modules
 var database = require('./database'),
 	routes = require('./routes'),
 	server = routes.server,
@@ -59,6 +76,8 @@ io.sockets.on('connection',function(client){
 		// logout session when user disconnected
 		database.get_user_session(client,function(session){
 			if(session){
+				// this is stupid.
+				// TODO: Call logout_session when user logs out or based on timeout.
 				database.logout_session(client, function(res){
 					socketclient.broadcast(io,"<p style='color:red'>"+session.username+" is disconnected.</p>");
 				});

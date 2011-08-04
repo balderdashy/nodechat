@@ -1,10 +1,4 @@
-function S4() {
-    return (((1 + Math.random()) * 65536) | 0).toString(16).substring(1)
-}
-function guid() {
-    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4())
-}
-
+// Localstorage -> server connector
 var Store = function(b) {
     this.name = b;
     var a = localStorage.getItem(this.name);
@@ -16,7 +10,7 @@ _.extend(Store.prototype, {
     },
     create: function(a) {
         if (!a.id) {
-            a.id = a.attributes.id = guid()
+            a.id = a.attributes.id = _.guid()
         }
         this.data[a.id] = a;
         this.save();
